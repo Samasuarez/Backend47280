@@ -1,3 +1,5 @@
+const fs = require('fs')
+
 class Product {
   constructor(id, title, price, thumbnail, description, code, stock) {
     this.id = id;
@@ -11,11 +13,12 @@ class Product {
 }
 
 class ProductManager {
-  constructor() {
-    this.products = [];
-    this.currentId = 1;
+  constructor(path) {
+   this.path = path
   }
 
+  // getProducts() {
+  // }
   addProduct(title, price, thumbnail, description, code, stock) {
     if (!title || !price || !thumbnail || !description || !code || !stock) {
       console.log("Error: Todos los campos son obligatorios.");
@@ -43,9 +46,6 @@ class ProductManager {
     this.currentId++;
   }
 
-  getProducts() {
-    return this.products;
-  }
 
   getProductById(id) {
     const product = this.products.find((product) => product.id === id);
@@ -65,7 +65,8 @@ class ProductManager {
       console.log("Description:", product.description);
       console.log("Code:", product.code);
       console.log("Stock:", product.stock);
-      console.log("------------------------");
+  
     });
   }
 }
+module.exports = ProductManager;
