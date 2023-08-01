@@ -68,7 +68,7 @@ class ProductManager {
   }
 }
 const productManager = new ProductManager("./files/products.json");
-const prod1 = new Product(
+const prod1 = (
   "Product 1",
   10.99,
   "P1",
@@ -78,3 +78,4 @@ const prod1 = new Product(
 );
 productManager.addProducts(prod1);
 productManager.getProducts();
+// productManager.deleteProduct(prod1)  
