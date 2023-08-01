@@ -53,6 +53,6 @@ class ProductManager {
   }
 }
 const productManager = new ProductManager("./files/products.json");
- const prod1 = ("Product 1", 10.99, "P1", 100, "thumbnail1.jpg", "Description 1")
-productManager.addProducts(prod1);
+ const prod1 = new Product("Product 1", 10.99, "P1", 100, "thumbnail1.jpg", "Description 1")
+ productManager.addProducts(prod1);
 productManager.getProducts()
