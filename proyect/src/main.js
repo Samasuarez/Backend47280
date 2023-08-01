@@ -1,16 +1,13 @@
-const fs = require("fs");
-const path = require("path");
-const { title } = require("process");
-
+const fs = require("fs").promises;
 class ProductManager {
-  constructor() {
+  constructor(path) {
     this.path = path;
     this.products = [];
   }
 
-  getProducts = (products) => {
+  getProducts = async () => {
+    const products = JSON.parse(await fs.readFile(this.path, 'utf-8'))
     try {
-      products = JSON.stringify(fs.watchFile(this.path, "utf-8"));
       console.log(products);
     } catch {
       console.log("error al cargar los productos");
@@ -18,21 +15,32 @@ class ProductManager {
   };
 
   addProducts = async (product) => {
-    const product = new Product(
+    const product = new Product({
       title,
       price,
       stock,
       thumbnail,
       code,
-      description
+      description}
     );
-    products = Json.parse(await fs.readFile("./products.txt", "utf-8"));
+    const products = JSON.parse(await fs.readFile(this.path, "utf-8"));
     if (products.find((producto) => producto.id == product.id)) {
       return "producto agregado";
     }
     products.push(product);
-    await fs.writeFile("./products.txt"(JSON.stringify(this.products)));
+    await fs.writeFile(this.path, (JSON.stringify(this.products)));
   };
+
+  getProductById = async (id) => {
+    const products = JSON.parse(await fs.readFile( this.path , 'utf-8'))
+    const prod = products.find(producto => producto.id === id)
+    if (prod) {
+        console.log(prod)
+    } else {
+        console.log("Producto no existe")
+    }
+}
+
 }
 
 class Product {
