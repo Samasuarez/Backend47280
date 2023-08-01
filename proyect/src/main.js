@@ -51,8 +51,30 @@ class ProductManager {
       console.log("Producto no existe");
     }
   }
+  async updateProduct(id, { nombre }) {
+    const products = JSON.parse(await fs.readFile(this.path, "utf-8"));
+    const indice = products.findIndex((prod) => prod.id === id);
+    if (indice != -1) {
+      products[indice].nombre = nombre;
+      await fs.writeFile(this.path, JSON.stringify(products));
+    } else {
+      console.log("Producto no encontrado");
+    }
+  }
+  async deleteProduct(id) {
+    const products = JSON.parse(await fs.readFile(this.path, "utf-8"));
+    const prods = products.filter((prod) => prod.id != id);
+    await fs.writeFile(this.path, JSON.stringify(prods));
+  }
 }
 const productManager = new ProductManager("./files/products.json");
- const prod1 = new Product("Product 1", 10.99, "P1", 100, "thumbnail1.jpg", "Description 1")
- productManager.addProducts(prod1);
-productManager.getProducts()
+const prod1 = new Product(
+  "Product 1",
+  10.99,
+  "P1",
+  100,
+  "thumbnail1.jpg",
+  "Description 1"
+);
+productManager.addProducts(prod1);
+productManager.getProducts();
