@@ -1,81 +1,17 @@
-const fs = require("fs").promises;
+const express = require("express");
+const ProductManager = require("./class/ProductManager");
+const app = express();
+const port = 4000;
+const productManager = new ProductManager();
+app.use(express.urlencoded({ extended: true }));
+app.get("/", async (req, res) => {
+  await res.send("pagina de inicio");
+});
 
-class Product {
-  static idIncrement = 1;
+app.get("/products",(req, res) => {
+ 
+});
 
-  constructor(title, price, code, stock, thumbnail, description) {
-    this.id = Product.idIncrement++;
-    this.title = title;
-    this.price = price;
-    this.code = code;
-    this.stock = stock;
-    this.thumbnail = thumbnail;
-    this.description = description;
-  }
-}
-
-class ProductManager {
-  constructor(path) {
-    this.path = path;
-    this.products = [];
-  }
-
-  async getProducts() {
-    const products = JSON.parse(await fs.readFile(this.path, "utf-8"));
-    console.log(products);
-  }
-
-  async addProducts(title, price, code, stock, thumbnail, description) {
-    const product = new Product(
-      title,
-      price,
-      code,
-      stock,
-      thumbnail,
-      description
-    );
-    const products = JSON.parse(await fs.readFile(this.path, "utf-8"));
-    if (products.find((producto) => producto.id === product.id)) {
-      return "Producto ya agregado";
-    }
-    products.push(product);
-    await fs.writeFile(this.path, JSON.stringify(products));
-  }
-
-  async getProductById(id) {
-    const products = JSON.parse(await fs.readFile(this.path, "utf-8"));
-    const prod = products.find((producto) => producto.id === id);
-    if (prod) {
-      console.log(prod);
-    } else {
-      console.log("Producto no existe");
-    }
-  }
-  async updateProduct(id, { nombre }) {
-    const products = JSON.parse(await fs.readFile(this.path, "utf-8"));
-    const indice = products.findIndex((prod) => prod.id === id);
-    if (indice != -1) {
-      products[indice].nombre = nombre;
-      await fs.writeFile(this.path, JSON.stringify(products));
-    } else {
-      console.log("Producto no encontrado");
-    }
-  }
-  async deleteProduct(id) {
-    const products = JSON.parse(await fs.readFile(this.path, "utf-8"));
-    const prods = products.filter((prod) => prod.id != id);
-    await fs.writeFile(this.path, JSON.stringify(prods));
-  }
-}
-const productManager = new ProductManager("./files/products.json");
-const prod1 = (
-  "Product 1",
-  10.99,
-  "P1",
-  100,
-  "thumbnail1.jpg",
-  "Description 1"
-);
-productManager.addProducts(prod1);
-productManager.getProducts();
-// productManager.deleteProduct(prod1)  
+app.listen(port, () => {
+  console.log(`server on port ${port}`);
+});
