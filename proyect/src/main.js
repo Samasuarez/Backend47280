@@ -21,9 +21,17 @@ app.get('/products', async (req, res) => {
       res.status(500).json({ error: "Error al cargar productos" });
   }
 });
-app.get('/products/:pid', async ()=>{
+app.get("/products/:pid", (req, res) => {
+  try {
+    const productId = req.params.pid
+    const product = productManager.getProductById(productId);
+    res.status(200).send(product);
+  } catch (error) {
+    console.error(error);
+    res.status(400).send({ message: `producto ${productId} no encontrado` });
+  }
+});
 
-})
 app.post("/products", async (req, res) => {
   const { title, price, code, stock, thumbnail, description } = req.body;
   try {
