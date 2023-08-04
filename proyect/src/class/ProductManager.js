@@ -21,8 +21,13 @@ class ProductManager {
   }
 
   async getProducts() {
-    const products = JSON.parse(await fs.readFile(this.path, "utf-8"));
-    console.log(products);
+    try {
+      const products = JSON.parse(await fs.readFile(this.path, "utf-8"));
+      return products; // Agrega esta línea para retornar los productos leídos
+    } catch (error) {
+      console.error("Error al cargar productos:", error);
+      throw error;
+    }
   }
 
   async addProducts(title, price, code, stock, thumbnail, description) {
