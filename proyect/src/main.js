@@ -11,18 +11,21 @@ app.get("/", (req, res) => {
   res.send("pagina de inicio");
 });
 
-app.get("/products", async (req, res) => {
+app.get('/products', async (req, res) => {
   try {
-    const products = await productManager.getProducts();
-    res.status(200).json(products);
+      const limit = req.query.limit || -1;
+      const products = await productManager.getProducts(limit);
+      res.status(200).json(products);
   } catch (error) {
-    res.status(400).json({ error: "error al cargar productos" });
+      console.error(error);
+      res.status(500).json({ error: "Error al cargar productos" });
   }
 });
+app.get('/products/:pid', async ()=>{
 
+})
 app.post("/products", async (req, res) => {
   const { title, price, code, stock, thumbnail, description } = req.body;
-
   try {
     const product = await productManager.addProducts(
       title,
@@ -32,7 +35,6 @@ app.post("/products", async (req, res) => {
       thumbnail,
       description
     );
-
     if (product === "Producto ya agregado") {
       res.status(400).json({ error: result });
     } else {
