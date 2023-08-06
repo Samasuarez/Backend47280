@@ -34,5 +34,23 @@
     "stock": 100,
     "thumbnail": "thumbnail1.jpg",
     "description": "Description 1"
+  },
+  {
+    "id": 5,
+    "title": "Product 8",
+    "price": 10.99,
+    "code": "P9",
+    "stock": 100,
+    "thumbnail": "thumbnail1.jpg",
+    "description": "Description 1"
+  },
+  {
+    "id": 6,
+    "title": "Product 8",
+    "price": 10.99,
+    "code": "P5",
+    "stock": 100,
+    "thumbnail": "thumbnail1.jpg",
+    "description": "Description 1"
   }
 ]

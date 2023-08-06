@@ -46,14 +46,19 @@ class ProductManager {
   }
 
   async getProductById(id) {
-    const products = JSON.parse(await fs.readFile(this.path, "utf-8"));
-    const prod = products.find((producto) => producto.id === id);
-    if (prod) {
-      console.log(prod);
-    } else {
-      console.log("Producto no existe");
+    try {
+      const products = JSON.parse(await fs.readFile(this.path, "utf-8"));
+      const prod = products.find((producto) => producto.id === id);
+      if (prod) {
+        return prod;
+      } else {
+        console.log("Producto no existe");
+      }
+    } catch (error) {
+      console.error("Error al leer el archivo:", error);
     }
   }
+
   async updateProduct(id, { nombre }) {
     const products = JSON.parse(await fs.readFile(this.path, "utf-8"));
     const indice = products.findIndex((prod) => prod.id === id);
