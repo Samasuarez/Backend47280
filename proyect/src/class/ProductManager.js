@@ -55,7 +55,7 @@ class ProductManager {
         console.log("Producto no existe");
       }
     } catch (error) {
-      console.error("Error al leer el archivo:", error);
+      console.log({ error: "Error al cargar productos" });
     }
   }
 

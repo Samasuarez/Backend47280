@@ -18,7 +18,7 @@ app.get("/products", async (req, res) => {
     res.status(200).json(products);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Error al cargar productos" });
+    res.status(400).json({ error: "Error al cargar productos" });
   }
 });
 app.get("/products/:pid", async (req, res) => {
@@ -31,7 +31,7 @@ app.get("/products/:pid", async (req, res) => {
       res.status(400).send({ message: `Producto ${productId} no encontrado` });
     }
   } catch (error) {
-    console.error(error);
+    console.log('error');
   }
 });
 
@@ -52,7 +52,6 @@ app.post("/products", async (req, res) => {
       res.status(201).json({ message: "Producto agregado exitosamente" });
     }
   } catch (error) {
-    console.error(error);
     res.status(400).json({ error: "Error al crear el producto" });
   }
 });
