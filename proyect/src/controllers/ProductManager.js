@@ -1,16 +1,17 @@
-const fs = require("fs").promises;
-
+import { promises as fs } from "fs";
 class Product {
   static idIncrement = 1;
-
-  constructor(title, price, code, stock, thumbnail, description) {
+  static codeIncrement = 1;
+  constructor(title, price, stock, thumbnail, description, status, category) {
     this.id = Product.idIncrement++;
     this.title = title;
     this.price = price;
-    this.code = code;
+    this.code = Product.codeIncrement++;
     this.stock = stock;
     this.thumbnail = thumbnail;
     this.description = description;
+    this.status = status;
+    this.category = category;
   }
 }
 
@@ -27,7 +28,6 @@ class ProductManager {
     }
     return products;
   }
-
   async addProducts(title, price, code, stock, thumbnail, description) {
     const product = new Product(
       title,
@@ -76,4 +76,4 @@ class ProductManager {
   }
 }
 
-module.exports = ProductManager;
+export default ProductManager;
