@@ -6,7 +6,7 @@ class Cart {
     this.products = [];
   }
 
-  static getNextCartId(carts) {
+  static getIncrementId(carts) {
     const maxId = carts.reduce(
       (max, cart) => (cart.id > max ? cart.id : max),
       0
@@ -24,7 +24,7 @@ class CartManager {
   async createCart() {
     try {
       const carts = JSON.parse(await fs.readFile(this.path, "utf-8"));
-      const newCartId = Cart.getNextCartId(carts);
+      const newCartId = Cart.getIncrementId(carts);
       const newCart = new Cart(newCartId);
       carts.push(newCart);
       await fs.writeFile(this.path, JSON.stringify(carts, null, 2));
@@ -43,11 +43,11 @@ class CartManager {
         return cartId;
       } else {
         console.log("Carrito no encontrado");
-        return null;
+        return;
       }
     } catch (error) {
       console.log("Error al cargar el carrito:", error.message);
-      return null;
+      return;
     }
   }
 
