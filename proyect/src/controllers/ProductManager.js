@@ -70,9 +70,15 @@ class ProductManager {
     }
   }
   async deleteProduct(id) {
-    const products = JSON.parse(await fs.readFile(this.path, "utf-8"));
-    const prods = products.filter((prod) => prod.id != id);
-    await fs.writeFile(this.path, JSON.stringify(prods));
+    try {
+      const products = JSON.parse(await fs.readFile(this.path, "utf-8"));
+      const prods = products.filter((prod) => prod.id != id);
+      await fs.writeFile(this.path, JSON.stringify(prods));
+      return true;
+    } catch (error) {
+      console.error("Error deleting product:", error);
+      return false;
+    }
   }
 }
 

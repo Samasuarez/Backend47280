@@ -47,5 +47,39 @@ routerProduct.post("/", async (req, res) => {
   } catch (error) {
     res.status(400).json({ error: "Error al crear el producto" });
   }
+
+  routerProduct.put("/:id", async (req, res) => {
+    const confirmacion = await productManager.updateProduct(
+      req.params.id,
+      req.body
+    );
+
+    if (confirmacion)
+      res.status(200).send("Producto actualizado correctamente");
+    else res.status(404).send("Producto no encontrado");
+  });
+
+  routerProduct.delete("/:id", async (req, res) => {
+    try {
+      const confirmacion = await productManager.deleteProduct(req.params.id);
+
+      if (confirmacion) {
+        res(200).send("Producto eliminado correctamente");
+      } else {
+        res(404).send("Producto no encontrado");
+      }
+    } catch (error) {
+      console.error("Error al eliminar el producto:", error);
+
+      res(500).send("Error interno del servidor");
+    }
+  });
+
+  // routerProduct.delete("/:id", async (req, res) => {
+  //   const confirmacion = await productManager.deleteProduct(req.params.id);
+
+  //   if (confirmacion) res.status(200).send("Producto eliminado correctamente");
+  //   else res.status(404).send("Producto no encontrado");
+  // });
 });
- export default routerProduct
+export default routerProduct;
