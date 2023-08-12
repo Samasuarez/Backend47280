@@ -1,36 +1,30 @@
-import { Router } from 'express'
+import { Router } from "express";
 import CartManager from "../controllers/CartManager.js";
 
 const cartManager = new CartManager("./models/carts.json");
 const routerCart = Router();
 
 routerCart.post("/", async (req, res) => {
-  const { id, quantity } = req.params;
   try {
-    const newCart = await cartManager.createCart({
-      id,
-      quantity,
-      products: [],
-    });
-    if (newCart) {
-      res.status(200).send("carrito creado exitosamente");
-    } else {
-      res.status(400).send("");
-    }
-  } catch (error) {}
+    const newCart = await cartManager.createCart();
+    res.status(200).json(newCart);
+  } catch (error) {
+    res.status(500).send("Error al crear el carrito: " + error.message);
+  }
 });
 
 routerCart.get("/:cid", async (req, res) => {
   try {
     const cartCid = parseInt(req.params.cid);
-    const cart = await cartManager.getCartCid(cartCid);
+    const cart = await cartManager.getCartId(cartCid);
     if (cart) {
       res.status(200).send(cart);
     } else {
-      res.status(400).send(`error carrito ${cartCid} no encontrado`);
+      res.status(400).send(`Error: Carrito ${cartCid} no encontrado`);
     }
   } catch (error) {
-    console.log("error carrito no encontrado", error);
+    console.log("Error al buscar carrito:", error);
+    res.status(500).send("Error interno del servidor");
   }
 });
 

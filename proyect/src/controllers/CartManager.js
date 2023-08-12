@@ -11,37 +11,39 @@ class Cart {
 
 class CartManager {
   constructor(path) {
-    this.path;
+    this.path = path;
     this.pathproducts = "./models/products.json";
-    this.carts = [];
+    // this.carts = [];
   }
 
-  async createCart(id) {
+  async createCart() {
     try {
-      const carts = JSON.parse(await fs.promises.readFile(this.path, "utf-8"));
-      const newCart = new Cart(id, products, quantity);
+      const carts = JSON.parse(await fs.readFile(this.path, "utf-8"));
+      const newCart = new Cart();
       carts.push(newCart);
-      await fs.promises.writeFile(this.path, JSON.stringify(carts, null, 2));
-      console.log(`carrito ${id} creado con exito.`);
+      await fs.writeFile(this.path, JSON.stringify(carts, null, 2));
+      console.log(`Carrito ${newCart.id} creado con éxito.`);
+      return newCart;
     } catch (error) {
-      console.error("error al creae el carrito", error);
+      console.error("Error al crear el carrito", error);
     }
   }
 
-  async getCartId() {
+  async getCartId(id) {
     try {
       const carts = JSON.parse(await fs.readFile(this.path, "utf-8"));
       const cartId = carts.find((c) => c.id === id);
       if (cartId) {
         return cartId;
       } else {
-        console.log("carrito no encontrado");
+        console.log("Carrito no encontrado");
+        return null;
       }
     } catch (error) {
-      console.log({ error: "error al cargar el carrito" });
+      console.log("Error al cargar el carrito:", error.message);
+      return null;
     }
   }
-
 
   async addToCart(cartId, productId) {
     try {
