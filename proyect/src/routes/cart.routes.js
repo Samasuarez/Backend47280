@@ -29,17 +29,26 @@ routerCart.get("/:cid", async (req, res) => {
 });
 
 routerCart.post("/:cid/product/:pid", async (req, res) => {
-  const cartId = req.params.cid;
-  const productId = req.params.pid;
+  const cartId = parseInt(req.params.cid); 
+  const productId = parseInt(req.params.pid);
 
   try {
-    await cartManager.addToCart(cartId, productId);
-    res.status(200).send("Producto agregado al carrito exitosamente.");
+    const result = await cartManager.addToCart(cartId, productId);
+
+    if (
+      result === "Producto no encontrado" ||
+      result === "Carrito no encontrado"
+    ) {
+      res.status(400).json({ message: result });
+    } else {
+      res.status(200).json({ message: result });
+    }
   } catch (error) {
-    res
-      .status(500)
-      .send("Error al agregar el producto al carrito: " + error.message);
+    res.status(500).json({
+      message: "Error al agregar el producto al carrito: " + error.message,
+    });
   }
 });
+
 
 export default routerCart;

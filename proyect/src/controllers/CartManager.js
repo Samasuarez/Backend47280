@@ -1,25 +1,31 @@
 import { promises as fs } from "fs";
 
 class Cart {
-  static quantityIncrement = 1;
-  static idIncrement = 1;
-  constructor() {
-    this.id = Cart.idIncrement++;
-    this.quantity = Cart.quantityIncrement++;
+  constructor(id) {
+    this.id = id;
+    this.products = [];
+  }
+
+  static getNextCartId(carts) {
+    const maxId = carts.reduce(
+      (max, cart) => (cart.id > max ? cart.id : max),
+      0
+    );
+    return maxId + 1;
   }
 }
 
 class CartManager {
   constructor(path) {
     this.path = path;
-    this.pathproducts = "./models/products.json";
-    // this.carts = [];
+    this.pathProducts = "./models/products.json";
   }
 
   async createCart() {
     try {
       const carts = JSON.parse(await fs.readFile(this.path, "utf-8"));
-      const newCart = new Cart();
+      const newCartId = Cart.getNextCartId(carts);
+      const newCart = new Cart(newCartId);
       carts.push(newCart);
       await fs.writeFile(this.path, JSON.stringify(carts, null, 2));
       console.log(`Carrito ${newCart.id} creado con éxito.`);
@@ -54,14 +60,12 @@ class CartManager {
 
       const cart = carts.find((c) => c.id === cartId);
       if (!cart) {
-        console.log("Carrito no encontrado");
-        return;
+        return "Carrito no encontrado";
       }
 
       const product = products.find((p) => p.id === productId);
       if (!product) {
-        console.log("Producto no encontrado");
-        return;
+        return "Producto no encontrado";
       }
 
       const cartProduct = cart.products.find((p) => p.product === productId);
@@ -72,8 +76,9 @@ class CartManager {
       }
 
       await fs.writeFile(this.path, JSON.stringify(carts, null, 2));
+      return "Producto agregado al carrito exitosamente.";
     } catch (error) {
-      console.log("Error al agregar al carrito", error);
+      throw new Error(`Error al agregar al carrito: ${error.message}`);
     }
   }
 }
