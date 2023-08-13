@@ -1,12 +1,1 @@
-[
-  {
-    "id": 1,
-    "title": "probando",
-    "price": 200,
-    "stock": "300",
-    "thumbnail": "thumbnail.jpg",
-    "description": "probandoando",
-    "status": true,
-    "code": "3"
-  }
-]
+[{"id":1,"title":"probando","price":200,"stock":"300","thumbnail":"thumbnail.jpg","description":"probandoando","status":true,"code":"3"},{"id":2,"title":"termo","price":200,"stock":"300","thumbnail":"thumbnail.jpg","description":"probando","status":true,"code":"9"},{"id":3,"title":"termo","price":200,"stock":"300","thumbnails":"thumbnail.jpg","description":"probando","status":true,"code":"7"}]

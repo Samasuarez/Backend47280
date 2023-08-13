@@ -29,7 +29,7 @@ routerProduct.get("/:pid", async (req, res) => {
 });
 
 routerProduct.post("/", async (req, res) => {
-  const { title, price, stock, thumbnail, description, category, code } =
+  const { title, price, stock, thumbnails, description, category, code } =
     req.body;
 
   try {
@@ -37,7 +37,7 @@ routerProduct.post("/", async (req, res) => {
       title,
       price,
       stock,
-      thumbnail,
+      thumbnails,
       description,
       category,
       code

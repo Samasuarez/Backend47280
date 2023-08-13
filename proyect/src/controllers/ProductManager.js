@@ -2,17 +2,25 @@ import { promises as fs } from "fs";
 class Product {
   static idIncrement = 1;
 
-  constructor(title, price, stock, thumbnail, description, category, code) {
-    this.id = Product.idIncrement++;
+  constructor(title, price, stock, thumbnails, description, category, code) {
+    this.id = Product.incrementarID();
     this.title = title;
     this.price = price;
     this.stock = stock;
-    this.thumbnail = thumbnail;
+    this.thumbnails = thumbnails;
     this.description = description;
     this.status = true;
     this.category = category;
     this.code = code;
   }
+  static incrementarID() {
+    if (this.idIncrement) { 
+        this.idIncrement++ 
+    } else {
+        this.idIncrement = 1 
+    }
+    return this.idIncrement
+}
 }
 
 class ProductManager {
@@ -32,7 +40,7 @@ class ProductManager {
     title,
     price,
     stock,
-    thumbnail,
+    thumbnails,
     description,
     category,
     code
@@ -41,7 +49,7 @@ class ProductManager {
       title,
       price,
       stock,
-      thumbnail,
+      thumbnails,
       description,
       category,
       code
