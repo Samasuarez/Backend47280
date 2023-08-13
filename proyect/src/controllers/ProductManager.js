@@ -1,17 +1,17 @@
 import { promises as fs } from "fs";
 class Product {
   static idIncrement = 1;
-  static codeIncrement = 1;
-  constructor(title, price, stock, thumbnail, description, status, category) {
-    this.id = Product.idIncrement++;
+
+  constructor(title, price, stock, thumbnail, description, category, code) {
+    this.id = Product.IdIncrement++;
     this.title = title;
     this.price = price;
-    this.code = Product.codeIncrement++;
     this.stock = stock;
     this.thumbnail = thumbnail;
     this.description = description;
-    this.status = status;
+    this.status = true;
     this.category = category;
+    this.code = code;
   }
 }
 
@@ -28,19 +28,29 @@ class ProductManager {
     }
     return products;
   }
-  async addProducts(title, price, code, stock, thumbnail, description) {
+  async addProduct(
+    title,
+    price,
+    stock,
+    thumbnail,
+    description,
+    category,
+    code
+  ) {
     const product = new Product(
       title,
       price,
-      code,
       stock,
       thumbnail,
-      description
+      description,
+      category,
+      code
     );
     const products = JSON.parse(await fs.readFile(this.path, "utf-8"));
-    if (products.find((producto) => producto.id === product.id)) {
+    if (products.find((producto) => producto.code === product.code)) {
       return "Producto ya agregado";
     }
+
     products.push(product);
     await fs.writeFile(this.path, JSON.stringify(products));
   }
