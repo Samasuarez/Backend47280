@@ -3,7 +3,7 @@ class Product {
   static idIncrement = 1;
 
   constructor(title, price, stock, thumbnail, description, category, code) {
-    this.id = Product.IdIncrement++;
+    this.id = Product.idIncrement++;
     this.title = title;
     this.price = price;
     this.stock = stock;
