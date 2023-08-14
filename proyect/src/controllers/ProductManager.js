@@ -1,34 +1,31 @@
 import { promises as fs } from "fs";
 class Product {
-  static idIncrement = 1;
-
-  constructor(title, price, stock, thumbnails, description, category, code) {
-    this.id = Product.incrementarID();
+  constructor(id, title, price, stock, thumbnail, description, category, code) {
+    this.id = id;
     this.title = title;
     this.price = price;
     this.stock = stock;
-    this.thumbnails = thumbnails;
+    this.thumbnail = thumbnail;
     this.description = description;
     this.status = true;
     this.category = category;
     this.code = code;
   }
-  static incrementarID() {
-    if (this.idIncrement) { 
-        this.idIncrement++ 
-    } else {
-        this.idIncrement = 1 
-    }
-    return this.idIncrement
-}
 }
 
 class ProductManager {
   constructor(path) {
     this.path = path;
     this.products = [];
+    this.nextProductId = 1;
   }
-
+  async generateNewId() {
+    const products = JSON.parse(await fs.readFile(this.path, "utf-8"));
+    if (products.length > 0) {
+      const lastProduct = products[products.length - 1];
+      this.nextProductId = lastProduct.id + 1;
+    }
+  }
   async getProducts(limit) {
     const products = JSON.parse(await fs.readFile(this.path, "utf-8"));
     if (limit !== -1) {
@@ -40,41 +37,32 @@ class ProductManager {
     title,
     price,
     stock,
-    thumbnails,
+    thumbnail,
     description,
     category,
     code
   ) {
+    await this.generateNewId();
+    const products = JSON.parse(await fs.readFile(this.path, "utf-8"));
+
+    if (products.find((producto) => producto.code === code)) {
+      return "Producto ya agregado";
+    }
+
     const product = new Product(
+      this.nextProductId++,
       title,
       price,
       stock,
-      thumbnails,
+      thumbnail,
       description,
       category,
       code
     );
-    const products = JSON.parse(await fs.readFile(this.path, "utf-8"));
-    if (products.find((producto) => producto.code === product.code)) {
-      return "Producto ya agregado";
-    }
 
     products.push(product);
+    // this.nextProductId++;
     await fs.writeFile(this.path, JSON.stringify(products));
-  }
-
-  async getProductById(id) {
-    try {
-      const products = JSON.parse(await fs.readFile(this.path, "utf-8"));
-      const prod = products.find((producto) => producto.id === id);
-      if (prod) {
-        return prod;
-      } else {
-        console.log("Producto no existe");
-      }
-    } catch (error) {
-      console.log({ error: "Error al cargar productos" });
-    }
   }
 
   async updateProduct(id, { nombre }) {
