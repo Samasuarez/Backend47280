@@ -1,1 +1,32 @@
-[{"id":1,"title":"yerba","price":20,"stock":"300","thumbnail":"thumbnail.jpg","description":"probando","status":true,"code":"3"},{"id":2,"title":"yerba","price":20,"stock":"4000","thumbnail":"thumbnail.jpg","description":"probando","status":true,"code":"3"},{"id":3,"title":"yerba","price":20,"stock":"400","thumbnail":"thumbnail.jpg","description":"probando","status":true,"code":"3"}]
+[
+  {
+    "id": 1,
+    "title": "yerba",
+    "price": 20,
+    "stock": "300",
+    "thumbnail": "thumbnail.jpg",
+    "description": "probando",
+    "status": true,
+    "code": "3"
+  },
+  {
+    "id": 2,
+    "title": "yerba",
+    "price": 20,
+    "stock": "4000",
+    "thumbnail": "thumbnail.jpg",
+    "description": "probando",
+    "status": true,
+    "code": "3"
+  },
+  {
+    "id": 3,
+    "title": "yerba",
+    "price": 20,
+    "stock": "400",
+    "thumbnail": "thumbnail.jpg",
+    "description": "probando",
+    "status": true,
+    "code": "3"
+  }
+]

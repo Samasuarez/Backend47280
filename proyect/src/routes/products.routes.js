@@ -1,4 +1,5 @@
 import { Router } from "express";
+
 import ProductManager from "../controllers/ProductManager.js";
 
 const productManager = new ProductManager("./models/products.json");
@@ -14,6 +15,9 @@ routerProduct.get("/", async (req, res) => {
     res.status(400).json({ error: "Error al cargar productos" });
   }
 });
+
+
+
 routerProduct.get("/:pid", async (req, res) => {
   try {
     const productId = parseInt(req.params.pid);
@@ -55,7 +59,7 @@ routerProduct.post("/", async (req, res) => {
 
 routerProduct.put("/:pid", async (req, res) => {
   const productId = parseInt(req.params.pid);
-  const updatedFields = req.body; 
+  const updatedFields = req.body;
 
   await productManager.updateProduct(productId, updatedFields);
 

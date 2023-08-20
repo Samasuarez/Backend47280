@@ -1,11 +1,11 @@
 import express from "express";
 import routerProduct from "./routes/products.routes.js";
 import routerCart from "./routes/cart.routes.js";
+import routerRealTime from "./routes/realTimeProducts.js";
 import { Server } from "socket.io";
 import { engine } from "express-handlebars";
 import { __dirname } from "./path.js";
 import path from "path";
-import { info } from "console";
 
 const app = express();
 const port = 4000;
@@ -23,15 +23,15 @@ io.on("connection", (socket) => {
     console.log(info);
     socket.emit("respuesta", true);
   });
-
-  socket.on("productos", (infoProducts) => {
-    if (infoProducts == "productos en tiempo real") {
-      console.log("coneccion a productos en tiempo real");
-    }
-  });
+  // socket.on("productos", (infoProducts) => {
+  //   if (infoProducts == "productos en tiempo real") {
+  //     console.log("coneccion a productos en tiempo real");
+  //   }
+  // });
 });
 
 app.use("/static", express.static(path.join(__dirname, "public")));
+app.use('/realtimeproducts', routerRealTime)
 app.use("/products", routerProduct);
 app.use("/carts", routerCart);
 
@@ -42,3 +42,4 @@ app.set("views", path.resolve(__dirname, "./views/"));
 app.get("/static", (req, res) => {
   res.render("home");
 });
+export { app, server, io }
