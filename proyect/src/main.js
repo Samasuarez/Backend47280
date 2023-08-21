@@ -14,24 +14,26 @@ const server = app.listen(port, () => {
   console.log(`server on port ${port}`);
 });
 const io = new Server(server);
+app.set("io", io);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 io.on("connection", (socket) => {
   console.log("conectado a servidor io");
 
-  socket.on("mensaje", (info) => {
-    console.log(info);
-    socket.emit("respuesta", true);
+  socket.on("nuevoProducto", async (nuevoProducto) => {
+    try {
+      io.emit("nuevoProducto", nuevoProducto);
+    } catch (error) {
+      console.log("Error al emitir el evento", error);
+    }
   });
-  // socket.on("productos", (infoProducts) => {
-  //   if (infoProducts == "productos en tiempo real") {
-  //     console.log("coneccion a productos en tiempo real");
-  //   }
-  // });
 });
 
-app.use("/static", express.static(path.join(__dirname, "public")));
-app.use('/realtimeproducts', routerRealTime)
+app.use(express.static(path.join(__dirname, "public")));
+app.get("/", (req, res) => {
+  res.render("home");
+});
+app.use("/realtimeproducts", routerRealTime);
 app.use("/products", routerProduct);
 app.use("/carts", routerCart);
 
@@ -42,4 +44,4 @@ app.set("views", path.resolve(__dirname, "./views/"));
 app.get("/static", (req, res) => {
   res.render("home");
 });
-export { app, server, io }
+// export { app, server, io };
