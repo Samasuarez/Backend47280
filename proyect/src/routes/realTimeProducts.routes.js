@@ -32,19 +32,13 @@ routerRealTime.post("/", async (req, res) => {
       return res.status(400).json({ error: "Producto ya agregado" });
     }
 
-    // Emitir el evento a través de la instancia de io
     req.app.get("io").emit("nuevoProducto", newProduct);
 
-    res.status(201).json({ message: "Producto creado exitosamente" });
+    res.status(201).json({ message: "Producto creado exitosamente", product: newProduct });
+    // return res.redirect("/realtimeproducts");
   } catch (error) {
     console.log("Error al crear el producto", error);
     res.status(400).json({ error: "Error al crear el producto" });
   }
 });
-
-
-
-
-
-
 export default routerRealTime;

@@ -1,5 +1,4 @@
 import { io } from "socket.io-client";
-
 const socket = io();
 
 socket.on("nuevoProducto", (nuevoProducto) => {
@@ -7,6 +6,7 @@ socket.on("nuevoProducto", (nuevoProducto) => {
 });
 
 const newProductForm = document.getElementById("new-product-form");
+
 newProductForm.addEventListener("submit", async (event) => {
   event.preventDefault();
 
@@ -26,7 +26,7 @@ newProductForm.addEventListener("submit", async (event) => {
   }
 
   try {
-    const response = await fetch("/realtimeproducts", {
+    const response = await fetch("/realtimeproducts/create", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -35,8 +35,10 @@ newProductForm.addEventListener("submit", async (event) => {
     });
 
     if (response.ok) {
-      console.log("Nuevo producto enviado:", formData);
-      clearForm();
+      const newProduct = await response.json();
+      console.log("Nuevo producto enviado:", newProduct);
+
+      newProductForm.reset();
     }
   } catch (error) {
     console.error("Error al enviar el producto", error);
@@ -46,8 +48,9 @@ newProductForm.addEventListener("submit", async (event) => {
 function displayProduct(product) {
   const productCard = document.createElement("div");
   productCard.className = "product-card";
-
   const title = document.createElement("h3");
+  title.textContent = product.title;
+  productCard.appendChild(title);
   title.textContent = product.title;
   productCard.appendChild(title);
   const price = document.createElement("p");
@@ -68,7 +71,6 @@ function displayProduct(product) {
   const code = document.createElement("p");
   code.textContent = product.code;
   productCard.appendChild(code);
-
   const productsList = document.querySelector(".products-container");
   productsList.appendChild(productCard);
 }
