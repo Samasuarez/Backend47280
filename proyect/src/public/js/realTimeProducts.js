@@ -38,12 +38,13 @@ newProductForm.addEventListener("submit", async (event) => {
       const newProduct = await response.json();
       console.log("Nuevo producto enviado:", newProduct);
 
-      newProductForm.reset();
+      // newProductForm.reset();
     }
   } catch (error) {
     console.error("Error al enviar el producto", error);
   }
 });
+// displayProduct(newProduct)
 
 function displayProduct(product) {
   const productCard = document.createElement("div");

@@ -22,8 +22,8 @@ app.use(express.static(path.join(__dirname, "public")));
 app.get("/", (req, res) => {
   res.render("home"); 
 });
-
-app.use("/products", routerProduct);
+  
+  app.use("/products", routerProduct);
 app.use("/carts", routerCart);
 
 const server = app.listen(port, () => {
@@ -35,8 +35,10 @@ app.use("/realtimeproducts", routerRealTime);
 
 io.on("connection", (socket) => {
   console.log("Connected to io server");
-
-  socket.on("nuevoProducto", () => {
-    console.log("nuevoProducto", nuevoProducto);
+  // socket.emit("nuevoProducto", (nuevoProducto) => {
+  //   displayProduct(nuevoProducto);
+  // });
+  socket.on("disconnect", () => {
+    console.log("Disconnected from io server");
   });
 });
