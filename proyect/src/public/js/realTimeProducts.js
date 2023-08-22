@@ -1,68 +1,74 @@
-const socket = io()
+import { io } from "socket.io-client";
 
-let products = [];
-function displayProducts(products) {
-  const productsList = document.getElementById("products-container");
-  productsList.innerHTML = "";
-
-  products.forEach((product) => {
-    const productCard = document.createElement("div");
-    productCard.className = "product-card";
-
-    const thumbnailImg = document.createElement("img");
-    thumbnailImg.src = product.thumbnail;
-    productCard.appendChild(thumbnailImg);
-
-    const title = document.createElement("h3");
-    title.textContent = product.title;
-    productCard.appendChild(title);
-
-    const category = document.createElement("p");
-    category.textContent = product.category;
-    productCard.appendChild(category);
-
-    const price = document.createElement("p");
-    price.textContent = `Precio: $${product.price}`;
-    productCard.appendChild(price);
-
-    productsList.appendChild(productCard);
-  });
-}
+const socket = io();
 
 socket.on("nuevoProducto", (nuevoProducto) => {
-  products.push(nuevoProducto); 
-  displayProducts(products); 
+  displayProduct(nuevoProducto);
 });
 
 const newProductForm = document.getElementById("new-product-form");
-newProductForm.addEventListener("submit", (event) => {
+newProductForm.addEventListener("submit", async (event) => {
   event.preventDefault();
 
-  const title = document.getElementById("title").value;
-  const price = parseFloat(document.getElementById("price").value);
-  const stock = parseInt(document.getElementById("stock").value);
-  const thumbnail = document.getElementById("thumbnail").value;
-  const description = document.getElementById("description").value;
-  const category = document.getElementById("category").value;
-  // const code = parseInt(document.getElementById("code").value);
+  const formData = {
+    title: document.getElementById("title").value,
+    price: parseFloat(document.getElementById("price").value),
+    thumbnail: document.getElementById("thumbnail").value,
+    stock: parseInt(document.getElementById("stock").value),
+    description: document.getElementById("description").value,
+    category: document.getElementById("category").value,
+    code: parseInt(document.getElementById("code").value),
+  };
 
-  if (!title || isNaN(price) || isNaN(stock) || !thumbnail || !category) {
+  if (!validateFormData(formData)) {
     console.log("Campos obligatorios incompletos");
     return;
   }
 
-  const nuevoProducto = {
-    title,
-    price,
-    stock,
-    thumbnail,
-    description,
-    category,
-    // code,
-  };
+  try {
+    const response = await fetch("/realtimeproducts", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
 
-  socket.emit("nuevoProducto", nuevoProducto);
-
- 
-  newProductForm.reset();
+    if (response.ok) {
+      console.log("Nuevo producto enviado:", formData);
+      clearForm();
+    }
+  } catch (error) {
+    console.error("Error al enviar el producto", error);
+  }
 });
+
+function displayProduct(product) {
+  const productCard = document.createElement("div");
+  productCard.className = "product-card";
+
+  const title = document.createElement("h3");
+  title.textContent = product.title;
+  productCard.appendChild(title);
+  const price = document.createElement("p");
+  price.textContent = `Precio: $${product.price}`;
+  productCard.appendChild(price);
+  const stock = document.createElement("p");
+  stock.textContent = product.stock;
+  productCard.appendChild(stock);
+  const thumbnailImg = document.createElement("img");
+  thumbnailImg.src = product.thumbnail;
+  productCard.appendChild(thumbnailImg);
+  const description = document.createElement("p");
+  description.textContent = product.description;
+  productCard.appendChild(description);
+  const category = document.createElement("p");
+  category.textContent = product.category;
+  productCard.appendChild(category);
+  const code = document.createElement("p");
+  code.textContent = product.code;
+  productCard.appendChild(code);
+
+  const productsList = document.querySelector(".products-container");
+  productsList.appendChild(productCard);
+}

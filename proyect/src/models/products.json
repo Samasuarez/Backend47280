@@ -53,5 +53,38 @@
     "status": true,
     "category": "Arte",
     "code": "66"
+  },
+  {
+    "id": 6,
+    "title": "tttttttt",
+    "price": "6666666666",
+    "stock": "88",
+    "thumbnail": "https://i.pinimg.com/236x/42/cc/c6/42ccc6774e8b9ff41b2c675a9c4bb075.jpg",
+    "description": "fghfgf",
+    "status": true,
+    "category": "fgdfdfd",
+    "code": "888888888"
+  },
+  {
+    "id": 7,
+    "title": "ggggggggg",
+    "price": "777777",
+    "stock": "88888888",
+    "thumbnail": "https://i.pinimg.com/236x/42/cc/c6/42ccc6774e8b9ff41b2c675a9c4bb075.jpg",
+    "description": "vdfdf",
+    "status": true,
+    "category": "lllll",
+    "code": "333333333"
+  },
+  {
+    "id": 8,
+    "title": "fffffffff",
+    "price": "555555555",
+    "stock": "77777777777",
+    "thumbnail": "https://i.pinimg.com/236x/42/cc/c6/42ccc6774e8b9ff41b2c675a9c4bb075.jpg",
+    "description": "fefef",
+    "status": true,
+    "category": "kkkkkkkkk",
+    "code": "88888888878"
   }
 ]
