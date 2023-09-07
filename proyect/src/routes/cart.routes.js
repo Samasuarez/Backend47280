@@ -1,26 +1,25 @@
 import { Router } from "express";
-import CartManager from "../controllers/CartManager.js";
+import cartModel from "../models/carts.model.js";
 
-const cartManager = new CartManager("./models/carts.json");
 const routerCart = Router();
 
 routerCart.post("/", async (req, res) => {
+  const { products } = req.body;
   try {
-    const newCart = await cartManager.createCart();
-    res.status(200).json(newCart);
+    const newCart = await cartModel.create( products );
+    res.status(201).json(newCart);
   } catch (error) {
     res.status(500).send("Error al crear el carrito: " + error.message);
   }
 });
-
 routerCart.get("/:cid", async (req, res) => {
+  const { cid } = req.params;
   try {
-    const cartCid = parseInt(req.params.cid);
-    const cart = await cartManager.getCartId(cartCid);
+    const cart = await cartModel.findById(cid);
     if (cart) {
       res.status(200).send(cart);
     } else {
-      res.status(400).send(`Error: Carrito ${cartCid} no encontrado`);
+      res.status(400).send(`Error: Carrito ${cid} no encontrado`);
     }
   } catch (error) {
     console.log("Error al buscar carrito:", error);
@@ -29,11 +28,11 @@ routerCart.get("/:cid", async (req, res) => {
 });
 
 routerCart.post("/:cid/product/:pid", async (req, res) => {
-  const cartId = parseInt(req.params.cid); 
-  const productId = parseInt(req.params.pid);
+  const cartId = req.params.cid;
+  const productId = req.params.pid;
 
   try {
-    const result = await cartManager.addToCart(cartId, productId);
+    const result = await cartModel.create(cartId, productId);
 
     if (
       result === "Producto no encontrado" ||
@@ -50,5 +49,19 @@ routerCart.post("/:cid/product/:pid", async (req, res) => {
   }
 });
 
+routerCart.delete("/:cid", async (req, res) => {
+  const { cid } = req.params;
+  try {
+    const success = await cartModel.findByIdAndDelete(cid)
+    if (cart) {
+      res.status(200).send({ resultado: "OK", message: success })
+
+    } else {
+      res.status(404).send({ resultado: 'Not Found', message: success })
+    }
+  } catch (error) {
+    res.status(400).send({error: `error al eliminar carrito ${error}`})
+  }
+});
 
 export default routerCart;

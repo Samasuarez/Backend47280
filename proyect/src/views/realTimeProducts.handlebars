@@ -3,12 +3,12 @@
 <div class="products-container">
   {{#each products}}
     <div class="product-card">
-      <img src="{{thumbnail}}" alt="{{title}} Thumbnail" />
-      <h2>{{title}}</h2>
-      <p>Precio: ${{price}}</p>
-      <p>Stock : {{stock}}</p>
-      <p>description: {{description}}</p>
-      <p>Category: {{category}}</p>
+      <img src="{{thumbnail}}" alt="{{this.title}} Thumbnail" />
+      <h2>{{this.title}}</h2>
+      <p>Precio: ${{this.price}}</p>
+      <p>Stock : {{this.stock}}</p>
+      <p>description: {{this.description}}</p>
+      <p>Category: {{this.category}}</p>
     </div>
   {{/each}}
 </div>

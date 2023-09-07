@@ -2,11 +2,11 @@ import express from "express";
 import { Server } from "socket.io";
 import { engine } from "express-handlebars";
 import { __dirname } from "./path.js";
+import mongoConect from "../db/index.js";
 import path from "path";
 import routerProduct from "./routes/products.routes.js";
 import routerCart from "./routes/cart.routes.js";
 import routerRealTime from "./routes/realTimeProducts.routes.js";
-
 const app = express();
 const port = 4000;
 
@@ -20,11 +20,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", (req, res) => {
-  res.render("home"); 
+  res.render("home");
 });
-  
-  app.use("/products", routerProduct);
-app.use("/carts", routerCart);
 
 const server = app.listen(port, () => {
   console.log(`Server on port ${port}`);
@@ -32,12 +29,11 @@ const server = app.listen(port, () => {
 const io = new Server(server);
 
 app.use("/realtimeproducts", routerRealTime);
-
+app.use("/products", routerProduct);
+app.use("/carts", routerCart);
+mongoConect();
 io.on("connection", (socket) => {
   console.log("Connected to io server");
-  // socket.emit("nuevoProducto", (nuevoProducto) => {
-  //   displayProduct(nuevoProducto);
-  // });
   socket.on("disconnect", () => {
     console.log("Disconnected from io server");
   });

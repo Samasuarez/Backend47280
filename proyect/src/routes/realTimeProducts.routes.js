@@ -1,9 +1,8 @@
 import { Router } from "express";
 import ProductManager from "../controllers/ProductManager.js";
 
+const productManager = new ProductManager('./models/products.json')
 const routerRealTime = Router();
-const productManager = new ProductManager("./models/products.json");
-
 
 routerRealTime.get("/", async (req, res) => {
   try {
@@ -14,6 +13,7 @@ routerRealTime.get("/", async (req, res) => {
     res.status(400).send({ error: "Error al cargar los productos" });
   }
 });
+
 routerRealTime.post("/", async (req, res) => {
   const { title, price, stock, thumbnail, description, category, code } = req.body;
 
@@ -27,16 +27,16 @@ routerRealTime.post("/", async (req, res) => {
       category,
       code
     );
-
-    // req.app.get("io").emit("nuevoProducto", newProduct);
-    const products = await productManager.getProducts(newProduct)
-    res.status(200).render('realTimeProducts.handlebars',  {products})
+ 
+   
+    // io.emit("nuevoProducto", newProduct); 
+    res.status(200).json(newProduct)
   
-    // res.status(201).json({ message: "Producto creado exitosamente", product: newProduct });
-    // return res.redirect("/realtimeproducts");
   } catch (error) {
     console.log("Error al crear el producto", error);
     res.status(400).json({ error: "Error al crear el producto" });
   }
 });
+
 export default routerRealTime;
+

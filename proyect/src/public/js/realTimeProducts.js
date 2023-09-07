@@ -1,11 +1,10 @@
 import { io } from "socket.io-client";
 const socket = io();
 
+const newProductForm = document.getElementById("new-product-form");
 socket.on("nuevoProducto", (nuevoProducto) => {
   displayProduct(nuevoProducto);
 });
-
-const newProductForm = document.getElementById("new-product-form");
 
 newProductForm.addEventListener("submit", async (event) => {
   event.preventDefault();
@@ -19,14 +18,14 @@ newProductForm.addEventListener("submit", async (event) => {
     category: document.getElementById("category").value,
     code: parseInt(document.getElementById("code").value),
   };
-
+  // newProductForm.onreset();
   if (!validateFormData(formData)) {
     console.log("Campos obligatorios incompletos");
     return;
   }
 
   try {
-    const response = await fetch("/realtimeproducts/create", {
+    const response = await fetch("/realtimeproducts", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -75,3 +74,6 @@ function displayProduct(product) {
   const productsList = document.querySelector(".products-container");
   productsList.appendChild(productCard);
 }
+socket.on("nuevoProducto", (newProduct) => {
+  displayProduct(newProduct);
+});
