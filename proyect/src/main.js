@@ -31,7 +31,9 @@ const io = new Server(server);
 app.use("/realtimeproducts", routerRealTime);
 app.use("/products", routerProduct);
 app.use("/carts", routerCart);
+
 mongoConect();
+
 io.on("connection", (socket) => {
   console.log("Connected to io server");
   socket.on("disconnect", () => {
