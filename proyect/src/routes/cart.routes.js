@@ -40,7 +40,7 @@ routerCart.get("/:cid", async (req, res) => {
     res.status(500).send("Error interno del servidor");
   }
 });
-// actualizar la cantidad de productos con los parametros pasados por body, en este caso quantity
+// actualizar la cantidad de productos (segun el id de cart y el id del product) con los parametros pasados por body, en este caso quantity
 routerCart.put("/:cid/products/:pid", async (req, res) => {
   const { cid, pid } = req.params;
   const { quantity } = req.body;
@@ -155,6 +155,7 @@ routerCart.delete("/:cid/products/:pid", async (req, res) => {
       .json({ error: "Error al eliminar el producto del carrito" });
   }
 });
+// eliminar carrito
 routerCart.delete("/:cid", async (req, res) => {
   const { cid } = req.params;
 
