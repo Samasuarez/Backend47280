@@ -50,7 +50,7 @@ routerProduct.get("/", async (req, res) => {
 
     res.status(200).send(response);
   } catch (error) {
-    res.status(400).send({ error: `Error al consultar productos: ${error}` });
+    res.status(400).send({ status: "error", error: `Error al consultar productos: ${error}` });
   }
 });
 
