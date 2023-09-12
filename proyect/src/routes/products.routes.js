@@ -53,15 +53,6 @@ routerProduct.get("/", async (req, res) => {
     res.status(400).send({ error: `Error al consultar productos: ${error}` });
   }
 });
-// routerProduct.get("/", async (req, res) => {
-//   const { limit } = req.query;
-//   try {
-//     const prods = await productModel.find().limit(limit);
-//     res.status(200).send(prods);
-//   } catch (error) {
-//     res.status(400).send({ error: `Error al consultar productos: ${error}` });
-//   }
-// });
 
 routerProduct.get("/:id", async (req, res) => {
   const { id } = req.params;
