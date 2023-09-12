@@ -57,7 +57,34 @@ routerCart.post("/:cid/product/:pid", async (req, res) => {
     });
   }
 });
+routerCart.put("/:cid/products/:pid", async (req, res) => {
+  const { cid, pid } = req.params;
+  const { quantity } = req.body;
+  try {
 
+    const updatedCart = await cartModel.findByIdAndUpdate(
+      cid,
+      {
+        $set: { "products.$[elem].quantity": quantity },
+      },
+      {
+        new: true,
+        arrayFilters: [{ "elem.id_prod": pid }],
+      }
+    );
+
+    if (!updatedCart) {
+      return res.status(404).json({ message: "Carrito no encontrado" });
+    }
+
+    res
+      .status(200)
+      .json({ message: "Cantidad de producto actualizada exitosamente" });
+  } catch (error) {
+    console.error("Error al actualizar la cantidad del producto:", error);
+    res.status(500).json({ message: "Error interno del servidor" });
+  }
+});
 routerCart.put("/:cid", async (req, res) => {
   const { cid } = req.params;
   const { products } = req.body;
@@ -68,31 +95,6 @@ routerCart.put("/:cid", async (req, res) => {
       res.status(200).send(cart);
     } else {
       res.status(404).json({ error: `Carrito no encontrado` });
-    }
-  } catch (error) {
-    res.status(500).json({ error: "Error interno del servidor" });
-  }
-});
-
-routerCart.put("/:cid/products/:pid", async (req, res) => {
-  const { cid, pid } = req.params;
-  const { quantity } = req.body;
-
-  try {
-    const cart = await cartModel.findById(cid);
-    if (cart) {
-      const productIndex = cart.products.findIndex(
-        (item) => item.id_prod.toString() === pid
-      );
-      if (productIndex !== -1) {
-        cart.products[productIndex].quantity = quantity;
-        await cart.save();
-        res.status(200).json({ message: "Cantidad actualizada correctamente" });
-      } else {
-        res.status(404).json({ error: "Producto no encontrado en el carrito" });
-      }
-    } else {
-      res.status(404).json({ error: "Carrito no encontrado" });
     }
   } catch (error) {
     res.status(500).json({ error: "Error interno del servidor" });
