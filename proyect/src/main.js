@@ -3,7 +3,11 @@ import { Server } from "socket.io";
 import { engine } from "express-handlebars";
 import { __dirname } from "./path.js";
 import mongoConect from "../db/index.js";
+import "dotenv/config";
 import path from "path";
+import cookieParser from "cookie-parser"
+import routerSession from "./routes/session.routes.js";
+import routerUser from "./routes/users.routes.js";
 import routerProduct from "./routes/products.routes.js";
 import routerCart from "./routes/cart.routes.js";
 import routerRealTime from "./routes/realTimeProducts.routes.js";
@@ -15,6 +19,7 @@ app.set("view engine", "handlebars");
 app.set("views", path.resolve(__dirname, "./views/"));
 
 app.use(express.json());
+app.use(cookieParser())
 app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static(path.join(__dirname, "public")));
@@ -27,7 +32,9 @@ const server = app.listen(port, () => {
   console.log(`Server on port ${port}`);
 });
 const io = new Server(server);
-
+app.get("/setCookie")
+app.get ("/session", routerSession)
+app.get("/login", routerUser)
 app.use("/realtimeproducts", routerRealTime);
 app.use("/products", routerProduct);
 app.use("/carts", routerCart);
