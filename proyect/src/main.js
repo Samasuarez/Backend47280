@@ -38,7 +38,9 @@ function checkUserRole(role) {
   app.use(express.urlencoded({ extended: true }));
 
   app.use(express.static(path.join(__dirname, "public")));
-
+  app.get("/login", (req, res) => {
+    res.render("login");
+  });
   app.get("/", (req, res) => {
     res.render("home");
   });
@@ -64,7 +66,6 @@ function checkUserRole(role) {
   app.use("/admin", checkUserRole("admin"), routerAdmin)
   app.use("/session", routerSession);
   app.use("/users",routerUser )
-  // app.use("/login", routerUser);
   app.use("/realtimeproducts", routerRealTime);
   app.use("/products", routerProduct);
   app.use("/carts", routerCart);

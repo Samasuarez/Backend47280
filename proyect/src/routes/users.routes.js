@@ -2,7 +2,7 @@ import { Router } from "express";
 import userModel from "../models/users.model.js";
 const routerUser = Router();
 
-routerUser.post("/", async (req, res) => {
+routerUser.post("/users", async (req, res) => {
   const { first_name, last_name, email, password, age, rol } = req.body;
   try {
     const response = await userModel.create({
