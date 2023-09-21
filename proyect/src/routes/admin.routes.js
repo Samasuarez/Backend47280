@@ -2,11 +2,13 @@ import { Router } from "express";
 
 const routerAdmin = Router();
 
-routerAdmin.get("/", (req, res) => {
-  if (req.session.login && req.session.user.rol === "admin") {
-    res.render("admin");
+routerAdmin.get("/admin", (req, res) => {
+  const user = req.session.user;
+
+  if (user && user.rol === "admin") {
+    res.render("admin_dashboard", { user });
   } else {
-    res.redirect("/login");
+    res.redirect("/productos");
   }
 });
 

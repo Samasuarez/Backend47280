@@ -1,9 +1,9 @@
 import { Router } from "express";
-import  userModel  from "../models/users.model.js";
+import userModel from "../models/users.model.js";
 
 const routerSession = Router();
 
-routerSession .post("/login", async (req, res) => {
+routerSession.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
   try {
@@ -18,15 +18,18 @@ routerSession .post("/login", async (req, res) => {
         req.session.login = true;
         req.session.user = user;
 
-        
-        res.redirect("/productos");
+        if (user.rol === "admin") {
+          req.session.role = "admin";
+          res.redirect("/admin");
+        } else {
+          req.session.role = "usuario";
+          res.redirect("/productos");
+        }
       } else {
-        res
-          .status(401)
-          .send({
-            resultado: "Unauthorized",
-            message: "Contraseña incorrecta",
-          });
+        res.status(401).send({
+          resultado: "Unauthorized",
+          message: "Contraseña incorrecta",
+        });
       }
     } else {
       res
@@ -38,7 +41,7 @@ routerSession .post("/login", async (req, res) => {
   }
 });
 
-routerSession .get("/logout", async (req, res) => {
+routerSession.get("/logout", async (req, res) => {
   try {
     if (req.session.login) {
       req.session.destroy((err) => {
@@ -56,4 +59,4 @@ routerSession .get("/logout", async (req, res) => {
     res.status(500).send({ error: `Error en logout: ${error.message}` });
   }
 });
- export default routerSession
+export default routerSession;

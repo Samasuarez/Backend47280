@@ -15,7 +15,17 @@ import routerAdmin from "./routes/admin.routes.js";
 
 const app = express();
 const port = 4000;
+function checkUserRole(role) {
+  return (req, res, next) => {
+    const user = req.session.user;
 
+    if (!user || user.rol !== role) {
+      return res.status(403).send("Access Denied"); 
+    }
+
+    next(); 
+  };
+}
 (async () => {
   const store = await mongoConnect();
 
@@ -33,7 +43,6 @@ const port = 4000;
     res.render("home");
   });
 
-  // Use the store for session
   app.use(
     session({
       secret: "tu_secreto_secreto",
@@ -43,8 +52,7 @@ const port = 4000;
     })
   );
 
-  // ... the rest of your application setup
-
+ 
   const server = app.listen(port, () => {
     console.log(`Server on port ${port}`);
   });
@@ -53,9 +61,10 @@ const port = 4000;
 
   app.get("/setCookie");
 
-  app.use("/admin", routerAdmin);
+  app.use("/admin", checkUserRole("admin"), routerAdmin)
   app.use("/session", routerSession);
-  app.use("/login", routerUser);
+  app.use("/users",routerUser )
+  // app.use("/login", routerUser);
   app.use("/realtimeproducts", routerRealTime);
   app.use("/products", routerProduct);
   app.use("/carts", routerCart);

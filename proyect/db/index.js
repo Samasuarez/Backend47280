@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
-// import { MongoClient } from "mongodb";
-// import session from "express-session";
+
 import MongoStore from "connect-mongo";
 
 const mongoConnect = async () => {
@@ -16,11 +15,10 @@ const mongoConnect = async () => {
     console.log("db connected");
 
     const client = mongoose.connection.getClient();
-    const db = client.db(); // Get the MongoDB database instance
-
+    const db = client.db(); 
     const store = MongoStore.create({
       client,
-      dbName: "your-database-name", // Replace with your actual database name
+      dbName: "", 
     });
 
     store.on("error", (error) => {
