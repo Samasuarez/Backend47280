@@ -2,9 +2,7 @@ import { Router } from "express";
 import userModel from "../models/users.model.js";
 
 const routerSession = Router();
-// routerSession.get("/login", async (req,res)=>{
-//   res.render("login.handlebars")
-// })
+
 routerSession.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
