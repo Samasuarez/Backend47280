@@ -10,10 +10,8 @@ routerSession.post('/login', passport.authenticate('login'), async (req, res) =>
       }
 
       req.session.user = {
-          first_name: req.user.first_name,
-          last_name: req.user.last_name,
-          age: req.user.age,
-          email: req.user.email
+          email: req.user.email,
+          password : req.user.password
       }
 
       res.status(200).send({ payload: req.user })
@@ -21,9 +19,13 @@ routerSession.post('/login', passport.authenticate('login'), async (req, res) =>
       res.status(500).send({ mensaje: `Error al iniciar sesion ${error}` })
   }
 })
-routerSession.get('/current', passportError("jwt"), authorization("user"),  (req, res) => {
+
+
+routerSession.get('/current', passportError("jwt"), authorization("User"),  (req, res) => {
   res.send(req.user)
 })
+
+
 
 routerSession.get("/logout", async (req, res) => {
   try {
