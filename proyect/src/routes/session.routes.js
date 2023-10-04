@@ -1,45 +1,30 @@
 import { Router } from "express";
-import userModel from "../models/users.model.js";
-
+import passport from "passport";
+import {passportError, authorization} from "../utils/messagesError.js"
 const routerSession = Router();
 
-routerSession.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-
+routerSession.post('/login', passport.authenticate('login'), async (req, res) => {
   try {
-    if (req.session.login) {
-      return res.status(200).send({ resultado: "Login ya existente" });
-    }
-
-    const user = await userModel.findOne({ email });
-
-    if (user) {
-      if (user.password === password) {
-        req.session.login = true;
-        req.session.user = user;
-
-        if (user.rol === "admin") {
-          req.session.role = "admin";
-          res.redirect("/admin");
-        } else {
-          req.session.role = "usuario";
-          res.redirect("/productos");
-        }
-      } else {
-        res.status(401).send({
-          resultado: "Unauthorized",
-          message: "Contraseña incorrecta",
-        });
+      if (!req.user) {
+          return res.status(401).send({ mensaje: "Invalidate user" })
       }
-    } else {
-      res
-        .status(404)
-        .send({ resultado: "Not Found", message: "Usuario no encontrado" });
-    }
+
+      req.session.user = {
+          first_name: req.user.first_name,
+          last_name: req.user.last_name,
+          age: req.user.age,
+          email: req.user.email
+      }
+
+      res.status(200).send({ payload: req.user })
   } catch (error) {
-    res.status(500).send({ error: `Error en login: ${error.message}` });
+      res.status(500).send({ mensaje: `Error al iniciar sesion ${error}` })
   }
-});
+})
+routerSession.get('/current', passportError("jwt"), authorization("user"),  (req, res) => {
+  res.send(req.user)
+
+})
 
 routerSession.get("/logout", async (req, res) => {
   try {

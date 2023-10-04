@@ -1,11 +1,11 @@
-
+import local from 'passport-local'
 import passport from "passport"; //Manejador de las estrategias
 import jwt from "passport-jwt";
 
 import  userModel  from "../models/users.model.js";
 
 //Defino la estrategia a utilizar
-// const LocalStrategy = local.Strategy;
+const LocalStrategy = local.Strategy;
 const JWTStrategy = jwt.Strategy;
 const ExtractJWT = jwt.ExtractJwt; //Extractor de los headers de la consulta
 
@@ -36,6 +36,26 @@ const initializePassport = () => {
       }
     )
   );
+  
+  passport.use('login', new LocalStrategy({ usernameField: 'email' }, async (username, password, done) => {
+    try {
+        const user = await userModel.findOne({ email: username })
+
+        if (!user) {
+            return done(null, false)
+        }
+
+        if (validatePassword(password, user.password)) {
+            return done(null, user) //Usuario y contraseña validos
+        }
+
+        return done(null, false) //Contraseña no valida
+
+    } catch (error) {
+        return done(error)
+    }
+
+}))
   //Inicializar la session del usr
   passport.serializeUser((user, done) => {
     done(null, user.user._id);
