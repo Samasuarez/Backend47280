@@ -2,7 +2,7 @@ import { Router } from "express";
 import cartModel from "../models/carts.model.js";
 
 const routerCart = Router();
-// crear el carrito
+
 routerCart.post("/", async (req, res) => {
   const { products } = req.body;
   try {
@@ -12,7 +12,7 @@ routerCart.post("/", async (req, res) => {
     res.status(500).send("Error al crear el carrito: " + error.message);
   }
 });
-// traer todos los carritos
+
 routerCart.get("/", async (req, res) => {
   const { limit } = req.params;
   try {
@@ -22,7 +22,7 @@ routerCart.get("/", async (req, res) => {
     res.status(400).send({ error: `error al cargar los carritos ${error}` });
   }
 });
-// traer carrito segun id mediante populate
+
 routerCart.get("/:cid", async (req, res) => {
   const { cid } = req.params;
   try {
@@ -40,7 +40,7 @@ routerCart.get("/:cid", async (req, res) => {
     res.status(500).send("Error interno del servidor");
   }
 });
-// actualizar la cantidad de productos (segun el id de cart y el id del product) con los parametros pasados por body, en este caso quantity
+
 routerCart.put("/:cid/products/:pid", async (req, res) => {
   const { cid, pid } = req.params;
   const { quantity } = req.body;
@@ -68,7 +68,7 @@ routerCart.put("/:cid/products/:pid", async (req, res) => {
     res.status(500).json({ message: "Error interno del servidor" });
   }
 });
-// agrgar array de products al carrito con los parametros pasados por body
+
 routerCart.put("/:cid", async (req, res) => {
   const { cid } = req.params;
   const { products } = req.body;
@@ -84,7 +84,7 @@ routerCart.put("/:cid", async (req, res) => {
     res.status(500).json({ error: "Error interno del servidor" });
   }
 });
-// agregar un nuevo producto al carrito mediante params (cid:id carrito, pid:id producto), si el mismo ya existe suma 1 al quantity
+
 routerCart.post("/:cid/products/:pid", async (req, res) => {
   const { cid, pid } = req.params;
 
@@ -123,7 +123,7 @@ routerCart.post("/:cid/products/:pid", async (req, res) => {
     res.status(400).send({ error: e });
   }
 });
-// eliminar del carrito un producto especifico
+
 routerCart.delete("/:cid/products/:pid", async (req, res) => {
   const { cid, pid } = req.params;
 
@@ -155,7 +155,7 @@ routerCart.delete("/:cid/products/:pid", async (req, res) => {
       .json({ error: "Error al eliminar el producto del carrito" });
   }
 });
-// eliminar carrito
+
 routerCart.delete("/:cid", async (req, res) => {
   const { cid } = req.params;
 
@@ -166,9 +166,13 @@ routerCart.delete("/:cid", async (req, res) => {
       return res.status(404).json({ message: "Carrito no encontrado" });
     }
 
-    res.status(200).json({ message: "Carrito y todos sus productos eliminados con éxito" });
+    res
+      .status(200)
+      .json({ message: "Carrito y todos sus productos eliminados con éxito" });
   } catch (error) {
-    res.status(400).json({ error: "Error al eliminar el carrito y sus productos" });
+    res
+      .status(400)
+      .json({ error: "Error al eliminar el carrito y sus productos" });
   }
 });
 

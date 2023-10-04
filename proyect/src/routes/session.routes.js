@@ -23,7 +23,6 @@ routerSession.post('/login', passport.authenticate('login'), async (req, res) =>
 })
 routerSession.get('/current', passportError("jwt"), authorization("user"),  (req, res) => {
   res.send(req.user)
-
 })
 
 routerSession.get("/logout", async (req, res) => {

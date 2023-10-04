@@ -9,7 +9,7 @@ export const passportError = (strategy) => {
             }
 
             if (!user) {
-                return res.status(401).send({ error: info.messages ? info.messages : info.toString() }) //Si me envian info.messages, muestro la respuesta que me enviaron sino muestro el objeto info pasado a string (pueden enviar info.messages = "Usuario no valido" o info = "User no validado")
+                return res.status(401).send({ error: info.messages ? info.messages : info.toString() }) 
             }
 
             req.user = user
