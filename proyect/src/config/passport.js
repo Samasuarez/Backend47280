@@ -12,7 +12,7 @@ const initializePassport = () => {
   const cookieExtractor = (req) => {
     console.log(req.cookies);
 
-    const token = req.cookie ? req.cookie.jwtCookie : {};
+    const token = req.cookies ? req.cookies.jwtCookie : {};
     console.log(token);
     return token;
   };
@@ -87,12 +87,19 @@ const initializePassport = () => {
   );
 
   passport.serializeUser((user, done) => {
-    done(null, user.user._id);
+    done(null, user._id);
   });
 
   passport.deserializeUser(async (id, done) => {
-    const user = await userModel.findById(id);
-    done(null, user);
+    try {
+      const user = await userModel.findById(id);
+      if (!user) {
+        return done(null, false);
+      }
+      done(null, user);
+    } catch (error) {
+      done(error);
+    }
   });
 };
 export default initializePassport;

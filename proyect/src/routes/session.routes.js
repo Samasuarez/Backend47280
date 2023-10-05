@@ -5,20 +5,28 @@ const routerSession = Router();
 
 routerSession.post('/login', passport.authenticate('login'), async (req, res) => {
   try {
-      if (!req.user) {
-          return res.status(401).send({ mensaje: "Invalidate user" })
-      }
+    if (!req.user){
+      return res.status(401).send({ mensaje: "Usuario no válido" });
+    }
+   
+    if (req.user.email === "admin@coder.com") {
+      req.user.rol = "admin";
+    } else {
+      req.user.rol = "usuario";
+    }
 
-      req.session.user = {
-          email: req.user.email,
-          password : req.user.password
-      }
+    req.session.user = {
+      email: req.user.email,
+      password: req.user.password,
+      rol: req.user.rol, 
+    }
 
-      res.status(200).send({ payload: req.user })
+    res.status(200).send({ payload: req.user });
   } catch (error) {
-      res.status(500).send({ mensaje: `Error al iniciar sesion ${error}` })
+    res.status(500).send({ mensaje: `Error al iniciar sesión ${error}` });
   }
-})
+});
+
 
 
 routerSession.get('/current', passportError("jwt"), authorization("User"),  (req, res) => {
