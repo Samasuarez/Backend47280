@@ -39,10 +39,10 @@ const initializePassport = () => {
     new LocalStrategy(
       { passReqToCallback: true, usernameField: "email" },
       async (req, username, password, done) => {
-        const { first_name, last_name, email, age } = req.body;
-
+        const { first_name, last_name, age } = req.body; 
+  
         try {
-          const user = await userModel.findOne({ email: email });
+          const user = await userModel.findOne({ email: username }); 
           if (user) {
             return done(null, false);
           }
@@ -50,7 +50,7 @@ const initializePassport = () => {
           const userCreated = await userModel.create({
             first_name: first_name,
             last_name: last_name,
-            email: email,
+            email: username, 
             age: age,
             password: passwordHash,
           });
@@ -62,6 +62,7 @@ const initializePassport = () => {
       }
     )
   );
+  
   passport.use(
     "login",
     new LocalStrategy(

@@ -68,7 +68,7 @@ routerProduct.get("/:id", async (req, res) => {
   }
 });
 
-routerProduct.post("/", passportError("jwt"), authorization("Admin"), async (req, res) => {
+routerProduct.post("/", passportError("jwt"), authorization("admin"), async (req, res) => {
   const { title, description, price, stock, category, code, thumbnails } =
     req.body;
   try {
