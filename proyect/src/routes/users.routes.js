@@ -3,7 +3,7 @@ import passport from "passport";
 
 const routerUser = Router();
 
-routerUser.post("/", (req, res, next) => {
+routerUser.post("/",  (req, res, next) => {
   passport.authenticate("register", (err, user, info) => {
     if (err) {
       return res.status(400).send({ error: err.message });
