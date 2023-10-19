@@ -34,10 +34,12 @@ app.use(
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 
+app.get("/static", (req, res) => {
+  res.render("home");
+});
 app.use(passport.initialize())
 app.use(passport.session())
 initializePassport()
-
 
 app.use("/", router);
 
