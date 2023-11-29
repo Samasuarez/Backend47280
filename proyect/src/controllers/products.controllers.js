@@ -1,10 +1,9 @@
 import productModel from "../models/products.model.js";
-import {passportError,authorization } from "../utils/messagesError.js"
-export const getProducts = async () => {
+
+export const getProducts = async (req, res) => {
   try {
     const { category, availability, sortByPrice, sortOrder, page, limit } =
       req.query;
-
     const filter = {};
     if (category) {
       filter.category = category;
@@ -12,22 +11,18 @@ export const getProducts = async () => {
     if (availability) {
       filter.status = availability === "available";
     }
-
     const sort = {};
     if (sortByPrice) {
       sort.price = sortOrder === "asc" ? 1 : -1;
     }
-
     const options = {
       page: parseInt(page) || 1,
       limit: parseInt(limit) || 10,
     };
-
     const products = await productModel.paginate(filter, {
       sort,
       ...options,
     });
-
     const response = {
       status: "success",
       payload: products.docs,
@@ -44,7 +39,6 @@ export const getProducts = async () => {
         ? `/products?page=${products.nextPage}&limit=${options.limit}`
         : null,
     };
-
     res.status(200).send(response);
   } catch (error) {
     res
@@ -55,10 +49,19 @@ export const getProducts = async () => {
       });
   }
 };
-
-export const createProducts = async ()=>{
-    passportError("jwt"), authorization("admin")
-    const { title, description, price, stock, category, code, thumbnails } =
+export const getProductsById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const prodId = await productModel.findById(id);
+    res.status(200).send(prodId);
+  } catch (error) {
+    res
+      .status(400)
+      .send({ error: `error producto ${response} no encontrado ` });
+  }
+};
+export const createProducts = async (req, res) => {
+  const { title, description, price, stock, category, code, thumbnails } =
     req.body;
   try {
     const success = await productModel.create({
@@ -75,10 +78,10 @@ export const createProducts = async ()=>{
   } catch (error) {
     res.status(400).json({ error: "Error al crear el producto" });
   }
-}
+};
 
-export const putProducts = async ()=>{
-     const { id } = req.params;
+export const putProductsById = async (req, res) => {
+  const { id } = req.params;
   const { title, price, stock, thumbnail, description, category, code } =
     req.body;
   try {
@@ -99,16 +102,15 @@ export const putProducts = async ()=>{
   } catch (error) {
     res.status(400).send({ error: `Error al actualizar producto: ${error}` });
   }
-}
+};
 
-export const deleteProduct = async ()=>{
-    const { id } = req.params;
-    try {
-      const success = await productModel.findByIdAndDelete(id);
-  
-      res.status(200).send({ resultado: "OK", prod: success });
-    } catch (error) {
-      res.status(400).send({ error: `Error al eliminar producto: ${error}` });
-    }
-}
-   
+export const deleteProduct = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const success = await productModel.findByIdAndDelete(id);
+
+    res.status(200).send({ resultado: "OK", prod: success });
+  } catch (error) {
+    res.status(400).send({ error: `Error al eliminar producto: ${error}` });
+  }
+};

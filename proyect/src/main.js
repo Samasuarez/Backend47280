@@ -1,5 +1,7 @@
 import "dotenv/config";
+import cors from "cors";
 import express from "express";
+import compression from "express-compression"
 import router from "./routes/main.routes.js";
 import session from "express-session";
 import passport from "passport";
@@ -11,8 +13,21 @@ import path from "path";
 import cookieParser from "cookie-parser";
 import initializePassport from "./config/passport.js";
 
+const whiteList = ["http://localhost:5173"];
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (whiteList.indexOf(origin) != -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error("Acceso denegado"));
+    }
+  },
+};
+
 const app = express();
 const port = 4000;
+app.use(compression())
+app.use(cors(corsOptions));
 
 mongoConnect();
 
@@ -37,9 +52,9 @@ app.use(express.static(path.join(__dirname, "public")));
 app.get("/static", (req, res) => {
   res.render("home");
 });
-app.use(passport.initialize())
-app.use(passport.session())
-initializePassport()
+app.use(passport.initialize());
+app.use(passport.session());
+initializePassport();
 
 app.use("/", router);
 
