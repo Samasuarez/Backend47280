@@ -1,7 +1,8 @@
 import "dotenv/config";
 import cors from "cors";
 import express from "express";
-import compression from "express-compression"
+// import { addLogger } from "./utils/logger.js";
+import compression from "express-compression";
 import router from "./routes/main.routes.js";
 import session from "express-session";
 import passport from "passport";
@@ -26,7 +27,12 @@ const corsOptions = {
 
 const app = express();
 const port = 4000;
-app.use(compression())
+// app.use(addLogger);
+// app.get("/", (req, res) => {
+//   req.logger.warn("alert");
+//   res.send({ message: "prueba" });
+// });
+app.use(compression());
 app.use(cors(corsOptions));
 
 mongoConnect();
@@ -57,6 +63,10 @@ app.use(passport.session());
 initializePassport();
 
 app.use("/", router);
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).send({ error: "Error interno del servidor" });
+});
 
 const server = app.listen(port, () => {
   console.log(`Server on port ${port}`);
