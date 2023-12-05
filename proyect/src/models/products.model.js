@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import mongoosePaginate from "mongoose-paginate-v2";
 
 const productsSchema = new mongoose.Schema({
@@ -32,11 +32,15 @@ const productsSchema = new mongoose.Schema({
     unique: true,
   },
   thumbnails: [],
+  owner: {
+    type: Schema.Types.ObjectId,
+    ref: "user", 
+  },
 });
-
 
 productsSchema.plugin(mongoosePaginate);
 
 const productModel = mongoose.model("products", productsSchema);
 
 export default productModel;
+

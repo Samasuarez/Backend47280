@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose";
-import  cartModel  from "./carts.model.js";
+import cartModel from "./carts.model.js";
+
 const userSchema = new mongoose.Schema({
   first_name: {
     type: String,
@@ -21,7 +22,7 @@ const userSchema = new mongoose.Schema({
   },
   rol: {
     type: String,
-    enum: ["usuario", "admin"],
+    enum: ["usuario", "admin", "premium"], 
     default: "usuario",
   },
   age: {
@@ -33,6 +34,7 @@ const userSchema = new mongoose.Schema({
     ref: "carts",
   },
 });
+
 userSchema.pre("save", async function (next) {
   try {
     const newCart = await cartModel.create({});
@@ -41,5 +43,6 @@ userSchema.pre("save", async function (next) {
     next(error);
   }
 });
+
 const userModel = mongoose.model("user", userSchema);
 export default userModel;
