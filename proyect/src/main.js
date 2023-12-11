@@ -1,7 +1,6 @@
 import "dotenv/config";
 import cors from "cors";
 import express from "express";
-// import { addLogger } from "./utils/logger.js";
 import compression from "express-compression";
 import router from "./routes/main.routes.js";
 import session from "express-session";
@@ -27,11 +26,7 @@ const corsOptions = {
 
 const app = express();
 const port = 4000;
-// app.use(addLogger);
-// app.get("/", (req, res) => {
-//   req.logger.warn("alert");
-//   res.send({ message: "prueba" });
-// });
+
 app.use(compression());
 app.use(cors(corsOptions));
 
